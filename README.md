@@ -2,7 +2,7 @@
 Project for INFS4102. CoWorkHub is a desktop application for managing a coworking space.
 
 ## Dependencies
-* Java 27
+* Java 25
 * Spring Boot Tools 2.4.1
 * Maven 3.10.0
 
