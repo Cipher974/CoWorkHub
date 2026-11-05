@@ -16,8 +16,9 @@ Project for INFS4102. CoWorkHub is a desktop application for managing a coworkin
 5. H2 Database
 
 ## Building
-1. `cd backend/`
-2. `mvn clean package`
+1. `git clone https://github.com/Cipher974/CoWorkHub.git`
+2. `cd backend/`
+3. `mvn clean package`
 
 ## Running
 ### Visual Studio Code
