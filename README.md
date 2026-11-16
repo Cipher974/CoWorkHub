@@ -5,6 +5,7 @@ Project for INFS4102. CoWorkHub is a desktop application for managing a coworkin
 * Java 25
 * Spring Boot Tools 2.4.1
 * Maven 3.10.0
+* Flutter 3.47.9
 
 ### Spring boot dependencies (for pom.xml)
 > [!NOTE]
@@ -19,6 +20,10 @@ Project for INFS4102. CoWorkHub is a desktop application for managing a coworkin
 1. `git clone https://github.com/Cipher974/CoWorkHub.git`
 2. `cd backend/`
 3. `mvn clean package`
+
+Flutter:
+* `cd ../frontend`
+* `flutter pub add http`
 
 ## Running
 ### Visual Studio Code
