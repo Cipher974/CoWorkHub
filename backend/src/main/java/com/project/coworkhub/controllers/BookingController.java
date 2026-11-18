@@ -16,7 +16,7 @@ import com.project.coworkhub.models.Booking;
 import com.project.coworkhub.services.BookingService;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
@@ -37,7 +37,7 @@ public class BookingController {
     }
 
     @Operation(summary = "Get Booking by id")
-    @GetMapping("/{id}")
+    @GetMapping
     public Booking getById(@PathVariable Long id) {
         return bookingService.findById(id);
     }
