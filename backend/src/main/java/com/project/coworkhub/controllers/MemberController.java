@@ -42,6 +42,6 @@ public class MemberController {
     @GetMapping("/{id}/bookings")
     public List<Booking> bookings(@PathVariable Long id) {
         service.findById(id); // 404 if the member does not exist
-        return bookingRepository.findByMemberIdOrderByStartDateTimeDesc(id);
+        return bookingRepository.findByMemberId(id);
     }
 }
