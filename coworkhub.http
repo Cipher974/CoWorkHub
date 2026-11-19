@@ -1,96 +1,291 @@
 
-### CoWorkHub API Testing
+### ==========================================
+### COWORKHUB - API TESTING
+### ==========================================
+
 @baseUrl = http://localhost:8080
 
-### 1. Check backend - Get all members
+### ==========================================
+### 1. MEMBERS
+### ==========================================
+
+### Get all members
 GET {{baseUrl}}/api/members
 Accept: application/json
 
 ###
 
-### 2. Get all resources
+### Get member by ID
+GET {{baseUrl}}/api/members/1
+Accept: application/json
+
+###
+
+### Create a new member
+POST {{baseUrl}}/api/members
+Content-Type: application/json
+
+{
+    "fullName": "Test User",
+    "email": "testuser@example.com"
+}
+
+###
+
+### Get bookings for a member
+GET {{baseUrl}}/api/members/1/bookings
+Accept: application/json
+
+
+### ==========================================
+### 2. RESOURCES
+### ==========================================
+
+### Get all resources
 GET {{baseUrl}}/api/resources
 Accept: application/json
 
 ###
 
-### 3. Get available resources
-GET {{baseUrl}}/api/resources/available
+### Get resource by ID
+GET {{baseUrl}}/api/resources/1
 Accept: application/json
 
 ###
 
-### 4. Get all bookings
+### Filter resources by type - ROOM
+GET {{baseUrl}}/api/resources?type=ROOM
+Accept: application/json
+
+###
+
+### Filter resources by type - DESK
+GET {{baseUrl}}/api/resources?type=DESK
+Accept: application/json
+
+###
+
+### Filter resources by minimum capacity
+GET {{baseUrl}}/api/resources?minCapacity=4
+Accept: application/json
+
+###
+
+### Filter resources by location
+GET {{baseUrl}}/api/resources?location=Doha
+Accept: application/json
+
+###
+
+### Filter resources by maximum hourly price
+GET {{baseUrl}}/api/resources?maxPrice=100
+Accept: application/json
+
+###
+
+### Combine resource filters
+GET {{baseUrl}}/api/resources?type=ROOM&minCapacity=4&location=Doha&maxPrice=100
+Accept: application/json
+
+
+### ==========================================
+### 3. CREATE MEETING ROOMS
+### ==========================================
+
+### Create a meeting room
+POST {{baseUrl}}/api/resources/rooms
+Content-Type: application/json
+
+{
+    "name": "Meeting Room A",
+    "location": "Doha",
+    "capacity": 8,
+    "hourlyRate": 75.0,
+    "status": "ACTIVE",
+    "hasProjector": true,
+    "hasVideoConference": true
+}
+
+
+### ==========================================
+### 4. CREATE DESKS
+### ==========================================
+
+### Create a desk
+POST {{baseUrl}}/api/resources/desks
+Content-Type: application/json
+
+{
+    "name": "Desk A1",
+    "location": "Doha",
+    "hourlyRate": 15.0,
+    "status": "ACTIVE",
+    "deskType": "STANDARD"
+}
+
+
+### ==========================================
+### 5. RESOURCE AVAILABILITY
+### ==========================================
+
+### Find all available resources
+GET {{baseUrl}}/api/resources/available?startDateTime=2026-11-20T09:00:00&endDateTime=2026-11-20T10:00:00
+Accept: application/json
+
+###
+
+### Find available rooms
+GET {{baseUrl}}/api/resources/available?startDateTime=2026-11-20T09:00:00&endDateTime=2026-11-20T10:00:00&type=ROOM
+Accept: application/json
+
+###
+
+### Find available desks
+GET {{baseUrl}}/api/resources/available?startDateTime=2026-11-20T09:00:00&endDateTime=2026-11-20T10:00:00&type=DESK
+Accept: application/json
+
+###
+
+### Find resources for 5 attendees
+GET {{baseUrl}}/api/resources/available?startDateTime=2026-11-20T09:00:00&endDateTime=2026-11-20T10:00:00&attendees=5
+Accept: application/json
+
+###
+
+### Find available rooms for 5 attendees
+GET {{baseUrl}}/api/resources/available?startDateTime=2026-11-20T09:00:00&endDateTime=2026-11-20T10:00:00&attendees=5&type=ROOM
+Accept: application/json
+
+
+### ==========================================
+### 6. BOOKINGS
+### ==========================================
+
+### Get all bookings
 GET {{baseUrl}}/api/bookings
 Accept: application/json
 
 ###
 
-### 5. Get bookings for a specific member
-GET {{baseUrl}}/api/members/1/bookings
+### Get booking by ID
+GET {{baseUrl}}/api/bookings/1
 Accept: application/json
 
 ###
 
-### 6. Create a new member
-POST {{baseUrl}}/api/members
-Content-Type: application/json
-
-{
-    
-}
-
-###
-
-### 7. Create a new booking
+### Create a booking
+### Change member and resource IDs to existing records
 POST {{baseUrl}}/api/bookings
 Content-Type: application/json
 
 {
-    
+    "startDateTime": "2026-11-20T09:00:00",
+    "endDateTime": "2026-11-20T10:00:00",
+    "attendees": 4,
+    "totalCost": 75.0,
+    "status": "CONFIRMED",
+    "member": {
+        "id": 1
+    },
+    "resource": {
+        "id": 1
+    }
 }
 
 ###
 
-### 8. Create a room
-POST {{baseUrl}}/api/resources/rooms
-Content-Type: application/json
-
-{
-    
-}
-
-###
-
-### 9. Create a desk
-POST {{baseUrl}}/api/resources/desks
-Content-Type: application/json
-
-{
-    
-}
-
-###
-
-### 10. Update a booking
+### Update a booking
 PUT {{baseUrl}}/api/bookings/1
 Content-Type: application/json
 
 {
-    
+    "startDateTime": "2026-11-20T11:00:00",
+    "endDateTime": "2026-11-20T12:00:00",
+    "attendees": 4,
+    "totalCost": 75.0,
+    "status": "CONFIRMED",
+    "member": {
+        "id": 1
+    },
+    "resource": {
+        "id": 1
+    }
 }
 
 ###
 
-### 11. Update a resource
+### Cancel a booking
+### Your model uses CANCELLED as a booking status
+PUT {{baseUrl}}/api/bookings/1
+Content-Type: application/json
+
+{
+    "startDateTime": "2026-11-20T09:00:00",
+    "endDateTime": "2026-11-20T10:00:00",
+    "attendees": 4,
+    "totalCost": 75.0,
+    "status": "CANCELLED",
+    "member": {
+        "id": 1
+    },
+    "resource": {
+        "id": 1
+    }
+}
+
+###
+
+### Delete a booking
+DELETE {{baseUrl}}/api/bookings/1
+
+
+### ==========================================
+### 7. UPDATE RESOURCES
+### ==========================================
+
+### Update a meeting room
 PUT {{baseUrl}}/api/resources/1
 Content-Type: application/json
 
 {
-    
+    "name": "Updated Meeting Room",
+    "location": "Doha",
+    "capacity": 10,
+    "hourlyRate": 90.0,
+    "status": "ACTIVE",
+    "hasProjector": true,
+    "hasVideoConference": true
 }
 
 ###
 
-### 12. Delete a resource
+### Update a desk
+PUT {{baseUrl}}/api/resources/2
+Content-Type: application/json
+
+{
+    "name": "Updated Desk",
+    "location": "Doha",
+    "hourlyRate": 20.0,
+    "status": "ACTIVE",
+    "deskType": "PREMIUM"
+}
+
+###
+
+### Set a resource out of service
+PUT {{baseUrl}}/api/resources/1
+Content-Type: application/json
+
+{
+    "status": "OUT_OF_SERVICE"
+}
+
+
+### ==========================================
+### 8. DELETE RESOURCES
+### ==========================================
+
+### Delete a resource
+### This will fail with HTTP 409 if it has bookings
 DELETE {{baseUrl}}/api/resources/1
