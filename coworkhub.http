@@ -1,0 +1,96 @@
+
+### CoWorkHub API Testing
+@baseUrl = http://localhost:8080
+
+### 1. Check backend - Get all members
+GET {{baseUrl}}/api/members
+Accept: application/json
+
+###
+
+### 2. Get all resources
+GET {{baseUrl}}/api/resources
+Accept: application/json
+
+###
+
+### 3. Get available resources
+GET {{baseUrl}}/api/resources/available
+Accept: application/json
+
+###
+
+### 4. Get all bookings
+GET {{baseUrl}}/api/bookings
+Accept: application/json
+
+###
+
+### 5. Get bookings for a specific member
+GET {{baseUrl}}/api/members/1/bookings
+Accept: application/json
+
+###
+
+### 6. Create a new member
+POST {{baseUrl}}/api/members
+Content-Type: application/json
+
+{
+    
+}
+
+###
+
+### 7. Create a new booking
+POST {{baseUrl}}/api/bookings
+Content-Type: application/json
+
+{
+    
+}
+
+###
+
+### 8. Create a room
+POST {{baseUrl}}/api/resources/rooms
+Content-Type: application/json
+
+{
+    
+}
+
+###
+
+### 9. Create a desk
+POST {{baseUrl}}/api/resources/desks
+Content-Type: application/json
+
+{
+    
+}
+
+###
+
+### 10. Update a booking
+PUT {{baseUrl}}/api/bookings/1
+Content-Type: application/json
+
+{
+    
+}
+
+###
+
+### 11. Update a resource
+PUT {{baseUrl}}/api/resources/1
+Content-Type: application/json
+
+{
+    
+}
+
+###
+
+### 12. Delete a resource
+DELETE {{baseUrl}}/api/resources/1
