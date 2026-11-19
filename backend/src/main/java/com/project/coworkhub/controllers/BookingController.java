@@ -37,7 +37,7 @@ public class BookingController {
     }
 
     @Operation(summary = "Get Booking by id")
-    @GetMapping
+    @GetMapping("/{id}")
     public Booking getById(@PathVariable Long id) {
         return bookingService.findById(id);
     }
