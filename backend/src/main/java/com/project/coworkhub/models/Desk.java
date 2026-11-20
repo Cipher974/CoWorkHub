@@ -11,4 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Desk extends BookableResource {
     private String deskType;
+
+    @Override
+    public String getType() { return "DESK"; }
 }
