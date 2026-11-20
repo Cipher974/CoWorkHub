@@ -36,8 +36,10 @@ public abstract class BookableResource {
 
     @Enumerated(EnumType.STRING)
     private ResourceStatus status = ResourceStatus.ACTIVE;
-
+    
     @OneToMany(mappedBy = "resource")
     @JsonIgnore
     private List<Booking> bookings = new ArrayList<>();
+
+    public abstract String getType();
 }
