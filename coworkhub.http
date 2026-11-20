@@ -1,291 +1,464 @@
-
-### ==========================================
+### ==========================================================
 ### COWORKHUB - API TESTING
-### ==========================================
+### VS Code REST Client / IntelliJ HTTP Client
+### ==========================================================
+### IMPORTANT
+### 1. Start the backend and PostgreSQL before running requests.
+### 2. Run requests in order.
+### 3. After creating a member/room/desk, copy the returned IDs
+###    into the variables below.
+### 4. The dates below use 21 November 2026. Change them if needed.
+### 5. These requests follow the API routes and JSON shapes in the
+###    HTTP examples supplied with the project report. Verify any
+###    endpoint marked OPTIONAL against the actual controller.
+### ==========================================================
 
 @baseUrl = http://localhost:8080
+@testDate = 2026-11-21
 
-### ==========================================
+### Replace these values with IDs returned by your POST requests.
+@memberId = 1
+@roomId = 1
+@deskId = 2
+@bookingId = 1
+
+### ==========================================================
 ### 1. MEMBERS
-### ==========================================
+### ==========================================================
 
-### Get all members
+### 1.1 Get all members
 GET {{baseUrl}}/api/members
 Accept: application/json
 
 ###
 
-### Get member by ID
-GET {{baseUrl}}/api/members/1
-Accept: application/json
-
-###
-
-### Create a new member
+### 1.2 Create a member
+### Use a new email for each fresh test run.
 POST {{baseUrl}}/api/members
 Content-Type: application/json
+Accept: application/json
 
 {
-    "fullName": "Test User",
-    "email": "testuser@example.com"
+  "fullName": "CoWorkHub Test User",
+  "email": "coworkhub.test.20261121@example.com"
 }
 
 ###
 
-### Get bookings for a member
-GET {{baseUrl}}/api/members/1/bookings
+### 1.3 Get member by ID
+### Replace @memberId with the ID returned by 1.2.
+GET {{baseUrl}}/api/members/{{memberId}}
+Accept: application/json
+
+###
+
+### 1.4 Get bookings for a member
+GET {{baseUrl}}/api/members/{{memberId}}/bookings
 Accept: application/json
 
 
-### ==========================================
-### 2. RESOURCES
-### ==========================================
+### ==========================================================
+### 2. RESOURCES - LISTING AND FILTERING
+### ==========================================================
 
-### Get all resources
+### 2.1 Get all resources
 GET {{baseUrl}}/api/resources
 Accept: application/json
 
 ###
 
-### Get resource by ID
-GET {{baseUrl}}/api/resources/1
+### 2.2 Get resource by ID
+GET {{baseUrl}}/api/resources/{{roomId}}
 Accept: application/json
 
 ###
 
-### Filter resources by type - ROOM
+### 2.3 Filter resources by type - ROOM
 GET {{baseUrl}}/api/resources?type=ROOM
 Accept: application/json
 
 ###
 
-### Filter resources by type - DESK
+### 2.4 Filter resources by type - DESK
 GET {{baseUrl}}/api/resources?type=DESK
 Accept: application/json
 
 ###
 
-### Filter resources by minimum capacity
+### 2.5 Filter resources by minimum capacity
 GET {{baseUrl}}/api/resources?minCapacity=4
 Accept: application/json
 
 ###
 
-### Filter resources by location
+### 2.6 Filter resources by location
 GET {{baseUrl}}/api/resources?location=Doha
 Accept: application/json
 
 ###
 
-### Filter resources by maximum hourly price
+### 2.7 Filter resources by maximum hourly price
 GET {{baseUrl}}/api/resources?maxPrice=100
 Accept: application/json
 
 ###
 
-### Combine resource filters
+### 2.8 Combine resource filters
 GET {{baseUrl}}/api/resources?type=ROOM&minCapacity=4&location=Doha&maxPrice=100
 Accept: application/json
 
 
-### ==========================================
-### 3. CREATE MEETING ROOMS
-### ==========================================
+### ==========================================================
+### 3. CREATE RESOURCES
+### ==========================================================
 
-### Create a meeting room
+### 3.1 Create a meeting room
 POST {{baseUrl}}/api/resources/rooms
 Content-Type: application/json
+Accept: application/json
 
 {
-    "name": "Meeting Room A",
-    "location": "Doha",
-    "capacity": 8,
-    "hourlyRate": 75.0,
-    "status": "ACTIVE",
-    "hasProjector": true,
-    "hasVideoConference": true
+  "name": "HTTP Test Meeting Room",
+  "location": "Doha",
+  "capacity": 8,
+  "hourlyRate": 75.0,
+  "status": "ACTIVE",
+  "hasProjector": true,
+  "hasVideoConference": true
 }
 
+###
 
-### ==========================================
-### 4. CREATE DESKS
-### ==========================================
-
-### Create a desk
+### 3.2 Create a desk
 POST {{baseUrl}}/api/resources/desks
 Content-Type: application/json
+Accept: application/json
 
 {
-    "name": "Desk A1",
-    "location": "Doha",
-    "hourlyRate": 15.0,
-    "status": "ACTIVE",
-    "deskType": "STANDARD"
+  "name": "HTTP Test Desk",
+  "location": "Doha",
+  "hourlyRate": 15.0,
+  "status": "ACTIVE",
+  "deskType": "STANDARD"
 }
 
 
-### ==========================================
-### 5. RESOURCE AVAILABILITY
-### ==========================================
+### ==========================================================
+### 4. RESOURCE AVAILABILITY
+### ==========================================================
 
-### Find all available resources
-GET {{baseUrl}}/api/resources/available?startDateTime=2026-11-20T09:00:00&endDateTime=2026-11-20T10:00:00
+### 4.1 Find all available resources for a time interval
+GET {{baseUrl}}/api/resources/available?startDateTime={{testDate}}T09:00:00&endDateTime={{testDate}}T10:00:00
 Accept: application/json
 
 ###
 
-### Find available rooms
-GET {{baseUrl}}/api/resources/available?startDateTime=2026-11-20T09:00:00&endDateTime=2026-11-20T10:00:00&type=ROOM
+### 4.2 Find available rooms
+GET {{baseUrl}}/api/resources/available?startDateTime={{testDate}}T09:00:00&endDateTime={{testDate}}T10:00:00&type=ROOM
 Accept: application/json
 
 ###
 
-### Find available desks
-GET {{baseUrl}}/api/resources/available?startDateTime=2026-11-20T09:00:00&endDateTime=2026-11-20T10:00:00&type=DESK
+### 4.3 Find available desks
+GET {{baseUrl}}/api/resources/available?startDateTime={{testDate}}T09:00:00&endDateTime={{testDate}}T10:00:00&type=DESK
 Accept: application/json
 
 ###
 
-### Find resources for 5 attendees
-GET {{baseUrl}}/api/resources/available?startDateTime=2026-11-20T09:00:00&endDateTime=2026-11-20T10:00:00&attendees=5
+### 4.4 Find resources for five attendees
+GET {{baseUrl}}/api/resources/available?startDateTime={{testDate}}T09:00:00&endDateTime={{testDate}}T10:00:00&attendees=5
 Accept: application/json
 
 ###
 
-### Find available rooms for 5 attendees
-GET {{baseUrl}}/api/resources/available?startDateTime=2026-11-20T09:00:00&endDateTime=2026-11-20T10:00:00&attendees=5&type=ROOM
+### 4.5 Find available rooms for five attendees
+GET {{baseUrl}}/api/resources/available?startDateTime={{testDate}}T09:00:00&endDateTime={{testDate}}T10:00:00&attendees=5&type=ROOM
 Accept: application/json
 
 
-### ==========================================
-### 6. BOOKINGS
-### ==========================================
+### ==========================================================
+### 5. BOOKINGS - READ AND CREATE
+### ==========================================================
 
-### Get all bookings
+### 5.1 Get all bookings
 GET {{baseUrl}}/api/bookings
 Accept: application/json
 
 ###
 
-### Get booking by ID
-GET {{baseUrl}}/api/bookings/1
+### 5.2 Get booking by ID
+GET {{baseUrl}}/api/bookings/{{bookingId}}
 Accept: application/json
 
 ###
 
-### Create a booking
-### Change member and resource IDs to existing records
+### 5.3 Create a valid booking
+### Uses the member and room IDs set above.
+### Per the report, the backend calculates totalCost and sets CONFIRMED.
 POST {{baseUrl}}/api/bookings
 Content-Type: application/json
+Accept: application/json
 
 {
-    "startDateTime": "2026-11-20T09:00:00",
-    "endDateTime": "2026-11-20T10:00:00",
-    "attendees": 4,
-    "totalCost": 75.0,
-    "status": "CONFIRMED",
-    "member": {
-        "id": 1
-    },
-    "resource": {
-        "id": 1
-    }
+  "startDateTime": "{{testDate}}T09:00:00",
+  "endDateTime": "{{testDate}}T10:00:00",
+  "attendees": 4,
+  "member": {
+    "id": {{memberId}}
+  },
+  "resource": {
+    "id": {{roomId}}
+  }
+}
+
+
+### ==========================================================
+### 6. BOOKING BUSINESS-RULE TESTS
+### ==========================================================
+
+### 6.1 Overlapping booking - expected conflict (normally HTTP 409)
+### Run after 5.3 has successfully created the 09:00-10:00 booking.
+POST {{baseUrl}}/api/bookings
+Content-Type: application/json
+Accept: application/json
+
+{
+  "startDateTime": "{{testDate}}T09:30:00",
+  "endDateTime": "{{testDate}}T10:30:00",
+  "attendees": 3,
+  "member": {
+    "id": {{memberId}}
+  },
+  "resource": {
+    "id": {{roomId}}
+  }
 }
 
 ###
 
-### Update a booking
-PUT {{baseUrl}}/api/bookings/1
+### 6.2 Adjacent booking - expected success (normally HTTP 201)
+### The first booking ends at 10:00; this one starts at 10:00.
+POST {{baseUrl}}/api/bookings
 Content-Type: application/json
+Accept: application/json
 
 {
-    "startDateTime": "2026-11-20T11:00:00",
-    "endDateTime": "2026-11-20T12:00:00",
-    "attendees": 4,
-    "totalCost": 75.0,
-    "status": "CONFIRMED",
-    "member": {
-        "id": 1
-    },
-    "resource": {
-        "id": 1
-    }
+  "startDateTime": "{{testDate}}T10:00:00",
+  "endDateTime": "{{testDate}}T11:00:00",
+  "attendees": 3,
+  "member": {
+    "id": {{memberId}}
+  },
+  "resource": {
+    "id": {{roomId}}
+  }
 }
 
 ###
 
-### Cancel a booking
-### Your model uses CANCELLED as a booking status
-PUT {{baseUrl}}/api/bookings/1
+### 6.3 Invalid interval - start is after end (expected HTTP 400)
+POST {{baseUrl}}/api/bookings
 Content-Type: application/json
+Accept: application/json
 
 {
-    "startDateTime": "2026-11-20T09:00:00",
-    "endDateTime": "2026-11-20T10:00:00",
-    "attendees": 4,
-    "totalCost": 75.0,
-    "status": "CANCELLED",
-    "member": {
-        "id": 1
-    },
-    "resource": {
-        "id": 1
-    }
+  "startDateTime": "{{testDate}}T12:00:00",
+  "endDateTime": "{{testDate}}T11:00:00",
+  "attendees": 2,
+  "member": {
+    "id": {{memberId}}
+  },
+  "resource": {
+    "id": {{roomId}}
+  }
 }
 
 ###
 
-### Delete a booking
-DELETE {{baseUrl}}/api/bookings/1
-
-
-### ==========================================
-### 7. UPDATE RESOURCES
-### ==========================================
-
-### Update a meeting room
-PUT {{baseUrl}}/api/resources/1
+### 6.4 Desk with two attendees - expected HTTP 400
+### This assumes the desk resource ID points to an ACTIVE desk.
+POST {{baseUrl}}/api/bookings
 Content-Type: application/json
+Accept: application/json
 
 {
-    "name": "Updated Meeting Room",
-    "location": "Doha",
-    "capacity": 10,
-    "hourlyRate": 90.0,
-    "status": "ACTIVE",
-    "hasProjector": true,
-    "hasVideoConference": true
+  "startDateTime": "{{testDate}}T13:00:00",
+  "endDateTime": "{{testDate}}T14:00:00",
+  "attendees": 2,
+  "member": {
+    "id": {{memberId}}
+  },
+  "resource": {
+    "id": {{deskId}}
+  }
 }
 
 ###
 
-### Update a desk
-PUT {{baseUrl}}/api/resources/2
+### 6.5 Room over capacity - expected HTTP 400
+### The room created above has capacity 8; request 9 attendees.
+POST {{baseUrl}}/api/bookings
 Content-Type: application/json
+Accept: application/json
 
 {
-    "name": "Updated Desk",
-    "location": "Doha",
-    "hourlyRate": 20.0,
-    "status": "ACTIVE",
-    "deskType": "PREMIUM"
+  "startDateTime": "{{testDate}}T14:00:00",
+  "endDateTime": "{{testDate}}T15:00:00",
+  "attendees": 9,
+  "member": {
+    "id": {{memberId}}
+  },
+  "resource": {
+    "id": {{roomId}}
+  }
+}
+
+
+### ==========================================================
+### 7. UPDATE AND CANCEL BOOKINGS
+### ==========================================================
+
+### 7.1 Update a booking
+### Confirm the update request DTO/service requirements before running.
+PUT {{baseUrl}}/api/bookings/{{bookingId}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "startDateTime": "{{testDate}}T11:00:00",
+  "endDateTime": "{{testDate}}T12:00:00",
+  "attendees": 4,
+  "status": "CONFIRMED",
+  "member": {
+    "id": {{memberId}}
+  },
+  "resource": {
+    "id": {{roomId}}
+  }
 }
 
 ###
 
-### Set a resource out of service
-PUT {{baseUrl}}/api/resources/1
+### 7.2 Cancel a booking
+### This follows the supplied design: cancellation changes status to CANCELLED.
+### Include any other fields required by your actual update DTO.
+PUT {{baseUrl}}/api/bookings/{{bookingId}}
 Content-Type: application/json
+Accept: application/json
 
 {
-    "status": "OUT_OF_SERVICE"
+  "startDateTime": "{{testDate}}T11:00:00",
+  "endDateTime": "{{testDate}}T12:00:00",
+  "attendees": 4,
+  "status": "CANCELLED",
+  "member": {
+    "id": {{memberId}}
+  },
+  "resource": {
+    "id": {{roomId}}
+  }
+}
+
+###
+
+### 7.3 Rebook the cancelled time slot - expected success if cancellation releases it
+POST {{baseUrl}}/api/bookings
+Content-Type: application/json
+Accept: application/json
+
+{
+  "startDateTime": "{{testDate}}T11:00:00",
+  "endDateTime": "{{testDate}}T12:00:00",
+  "attendees": 2,
+  "member": {
+    "id": {{memberId}}
+  },
+  "resource": {
+    "id": {{roomId}}
+  }
 }
 
 
-### ==========================================
-### 8. DELETE RESOURCES
-### ==========================================
+### ==========================================================
+### 8. UPDATE RESOURCE STATUS AND DELETE RESOURCE
+### ==========================================================
 
-### Delete a resource
-### This will fail with HTTP 409 if it has bookings
-DELETE {{baseUrl}}/api/resources/1
+### 8.1 Set the room OUT_OF_SERVICE
+### This full update body assumes PUT requires all room fields.
+PUT {{baseUrl}}/api/resources/{{roomId}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "HTTP Test Meeting Room",
+  "location": "Doha",
+  "capacity": 8,
+  "hourlyRate": 75.0,
+  "status": "OUT_OF_SERVICE",
+  "hasProjector": true,
+  "hasVideoConference": true
+}
+
+###
+
+### 8.2 Attempt to book the OUT_OF_SERVICE room - expected HTTP 409
+POST {{baseUrl}}/api/bookings
+Content-Type: application/json
+Accept: application/json
+
+{
+  "startDateTime": "{{testDate}}T15:00:00",
+  "endDateTime": "{{testDate}}T16:00:00",
+  "attendees": 2,
+  "member": {
+    "id": {{memberId}}
+  },
+  "resource": {
+    "id": {{roomId}}
+  }
+}
+
+###
+
+### 8.3 Attempt to delete a resource that has bookings
+### Expected HTTP 409 according to the report's business rule.
+DELETE {{baseUrl}}/api/resources/{{roomId}}
+Accept: application/json
+
+
+### ==========================================================
+### 9. DUPLICATE MEMBER EMAIL TEST
+### ==========================================================
+
+### Run this request using the SAME email as an existing member.
+### Expected HTTP 409 if duplicate-email conflicts are mapped to 409.
+POST {{baseUrl}}/api/members
+Content-Type: application/json
+Accept: application/json
+
+{
+  "fullName": "Duplicate Test User",
+  "email": "coworkhub.test.20261121@example.com"
+}
+
+
+### ==========================================================
+### 10. OPTIONAL / VERIFY BEFORE RUNNING
+### ==========================================================
+
+### The following endpoint appeared in the supplied HTTP file.
+### Keep and run it ONLY if BookingController implements DELETE.
+### Consider whether permanent deletion conflicts with keeping booking history.
+#
+# DELETE {{baseUrl}}/api/bookings/{{bookingId}}
+# Accept: application/json
+
+### ==========================================================
+### 11. DOCKER DATA-PERSISTENCE CHECK (MANUAL)
+### ==========================================================
+### 1. Create a member or booking and note its ID.
+### 2. Run: docker compose restart
+### 3. Re-run GET /api/members or GET /api/bookings.
+### 4. Confirm the record still exists.
+### Do not use docker compose down -v for this test because it removes
+### the named database volume and its stored data.
