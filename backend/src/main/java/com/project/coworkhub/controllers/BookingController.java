@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.coworkhub.models.Booking;
@@ -44,8 +45,10 @@ public class BookingController {
     
     @Operation(summary = "Create a Booking")
     @PostMapping
-    public ResponseEntity<Booking> createBooking(@Valid @RequestBody Booking booking) {
-        Booking response = bookingService.add(booking);
+    public ResponseEntity<Booking> createBooking(@RequestParam Long memberId,
+                                                @RequestParam Long resourceId,
+                                                @Valid @RequestBody Booking booking) {
+        Booking response = bookingService.add(memberId, resourceId, booking);
 
         return ResponseEntity
                     .status(HttpStatus.CREATED)
