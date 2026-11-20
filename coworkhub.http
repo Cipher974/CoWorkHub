@@ -119,6 +119,7 @@ Content-Type: application/json
     "name": "Desk A1",
     "location": "Doha",
     "hourlyRate": 15.0,
+    "capacity": 1,
     "status": "ACTIVE",
     "deskType": "STANDARD"
 }
@@ -174,8 +175,8 @@ Accept: application/json
 ###
 
 ### Create a booking
-### Change member and resource IDs to existing records
-POST {{baseUrl}}/api/bookings
+### Change memberId and resourceId to existing records
+POST {{baseUrl}}/api/bookings?memberId=1&resourceId=2
 Content-Type: application/json
 
 {
@@ -183,13 +184,7 @@ Content-Type: application/json
     "endDateTime": "2026-11-20T10:00:00",
     "attendees": 4,
     "totalCost": 75.0,
-    "status": "CONFIRMED",
-    "member": {
-        "id": 1
-    },
-    "resource": {
-        "id": 1
-    }
+    "status": "CONFIRMED"
 }
 
 ###
@@ -203,19 +198,12 @@ Content-Type: application/json
     "endDateTime": "2026-11-20T12:00:00",
     "attendees": 4,
     "totalCost": 75.0,
-    "status": "CONFIRMED",
-    "member": {
-        "id": 1
-    },
-    "resource": {
-        "id": 1
-    }
+    "status": "CONFIRMED"
 }
 
 ###
 
 ### Cancel a booking
-### Your model uses CANCELLED as a booking status
 PUT {{baseUrl}}/api/bookings/1
 Content-Type: application/json
 
@@ -224,16 +212,8 @@ Content-Type: application/json
     "endDateTime": "2026-11-20T10:00:00",
     "attendees": 4,
     "totalCost": 75.0,
-    "status": "CANCELLED",
-    "member": {
-        "id": 1
-    },
-    "resource": {
-        "id": 1
-    }
+    "status": "CANCELLED"
 }
-
-###
 
 ### Delete a booking
 DELETE {{baseUrl}}/api/bookings/1
