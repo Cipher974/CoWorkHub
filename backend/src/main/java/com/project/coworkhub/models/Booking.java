@@ -3,6 +3,7 @@ package com.project.coworkhub.models;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
@@ -24,21 +25,20 @@ public class Booking {
     @NotNull
     private LocalDateTime endDateTime;
     
-    @NotNull
+    @Min(1)
     private int attendees;
 
     @PositiveOrZero
     private double totalCost;
     
     @NotNull
+    @Enumerated(EnumType.STRING)
     private BookingStatus status;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "resource_id", nullable = false)
     private BookableResource resource;
