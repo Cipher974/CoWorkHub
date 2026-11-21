@@ -196,20 +196,15 @@ Accept: application/json
 
 
 ### Create a booking
-POST {{baseUrl}}/api/bookings?memberId=1&resourceId=1
+POST http://localhost:8080/api/bookings?memberId=1&resourceId=2
 Content-Type: application/json
-Accept: application/json
 
 {
-    "startDateTime": "2026-11-22T09:00:00",
-    "endDateTime": "2026-11-22T10:00:00",
+    "startDateTime": "2026-11-20T09:00:00",
+    "endDateTime": "2026-11-20T10:00:00",
     "attendees": 4,
-    "member": {
-        "id": 1
-    },
-    "resource": {
-        "id": 1
-    }
+    "totalCost": 75.0,
+    "status": "CONFIRMED"
 }
 
 
@@ -217,22 +212,17 @@ Accept: application/json
 
 ### 6.5 Room over capacity - expected HTTP 400
 ### The room created above has capacity 8; request 9 attendees.
-POST {{baseUrl}}/api/bookings
+PUT http://localhost:8080/api/bookings/1
 Content-Type: application/json
 Accept: application/json
 
 {
-  "startDateTime": "{{testDate}}T14:00:00",
-  "endDateTime": "{{testDate}}T15:00:00",
+  "startDateTime": "2026-11-22T14:00:00",
+  "endDateTime": "2026-11-22T15:00:00",
   "attendees": 9,
-  "member": {
-    "id": {{memberId}}
-  },
-  "resource": {
-    "id": {{roomId}}
-  }
+  "totalCost": 150.0,
+  "status": "CONFIRMED"
 }
-
 
 ### ==========================================================
 ### 7. UPDATE AND CANCEL BOOKINGS
