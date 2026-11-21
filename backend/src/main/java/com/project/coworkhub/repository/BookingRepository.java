@@ -21,5 +21,4 @@ public interface BookingRepository extends JpaRepository<Booking, Long>{
            "and b.startDateTime < :endDateTime and b.endDateTime > :startDateTime")
     List<Long> findConflictingResourceIds(@Param("status") BookingStatus status,
                                           @Param("endDateTime") LocalDateTime endDateTime,
-                                          @Param("startDateTime") LocalDateTime startDateTime);
-}
+                                          @Param("startDateTime") LocalDateTime startDateTime);       }

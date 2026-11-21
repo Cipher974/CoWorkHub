@@ -194,7 +194,6 @@ Accept: application/json
 ###
 
 
-
 ### Create a booking
 POST {{baseUrl}}/api/bookings?memberId=1&resourceId=1
 Content-Type: application/json
