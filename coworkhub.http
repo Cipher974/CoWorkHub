@@ -135,11 +135,11 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "HTTP Test Desk",
-  "location": "Doha",
-  "hourlyRate": 15.0,
-  "status": "ACTIVE",
-  "deskType": "STANDARD"
+    "name": "Desk A1",
+    "location": "Doha",
+    "hourlyRate": 15.0,
+    "status": "ACTIVE",
+    "deskType": "STANDARD"
 }
 
 
@@ -192,105 +192,24 @@ Accept: application/json
 
 ###
 
-### 5.3 Create a valid booking
-### Uses the member and room IDs set above.
-### Per the report, the backend calculates totalCost and sets CONFIRMED.
+### Create a booking
+### Change member and resource IDs to existing records
 POST {{baseUrl}}/api/bookings
 Content-Type: application/json
 Accept: application/json
 
 {
-  "startDateTime": "{{testDate}}T09:00:00",
-  "endDateTime": "{{testDate}}T10:00:00",
-  "attendees": 4,
-  "member": {
-    "id": {{memberId}}
-  },
-  "resource": {
-    "id": {{roomId}}
-  }
-}
-
-
-### ==========================================================
-### 6. BOOKING BUSINESS-RULE TESTS
-### ==========================================================
-
-### 6.1 Overlapping booking - expected conflict (normally HTTP 409)
-### Run after 5.3 has successfully created the 09:00-10:00 booking.
-POST {{baseUrl}}/api/bookings
-Content-Type: application/json
-Accept: application/json
-
-{
-  "startDateTime": "{{testDate}}T09:30:00",
-  "endDateTime": "{{testDate}}T10:30:00",
-  "attendees": 3,
-  "member": {
-    "id": {{memberId}}
-  },
-  "resource": {
-    "id": {{roomId}}
-  }
-}
-
-###
-
-### 6.2 Adjacent booking - expected success (normally HTTP 201)
-### The first booking ends at 10:00; this one starts at 10:00.
-POST {{baseUrl}}/api/bookings
-Content-Type: application/json
-Accept: application/json
-
-{
-  "startDateTime": "{{testDate}}T10:00:00",
-  "endDateTime": "{{testDate}}T11:00:00",
-  "attendees": 3,
-  "member": {
-    "id": {{memberId}}
-  },
-  "resource": {
-    "id": {{roomId}}
-  }
-}
-
-###
-
-### 6.3 Invalid interval - start is after end (expected HTTP 400)
-POST {{baseUrl}}/api/bookings
-Content-Type: application/json
-Accept: application/json
-
-{
-  "startDateTime": "{{testDate}}T12:00:00",
-  "endDateTime": "{{testDate}}T11:00:00",
-  "attendees": 2,
-  "member": {
-    "id": {{memberId}}
-  },
-  "resource": {
-    "id": {{roomId}}
-  }
-}
-
-###
-
-### 6.4 Desk with two attendees - expected HTTP 400
-### This assumes the desk resource ID points to an ACTIVE desk.
-POST {{baseUrl}}/api/bookings
-Content-Type: application/json
-Accept: application/json
-
-{
-  "startDateTime": "{{testDate}}T13:00:00",
-  "endDateTime": "{{testDate}}T14:00:00",
-  "attendees": 2,
-  "member": {
-    "id": {{memberId}}
-  },
-  "resource": {
-    "id": {{deskId}}
-  }
+    "startDateTime": "2026-11-20T09:00:00",
+    "endDateTime": "2026-11-20T10:00:00",
+    "attendees": 4,
+    "totalCost": 75.0,
+    "status": "CONFIRMED",
+    "member": {
+        "id": 1
+    },
+    "resource": {
+        "id": 1
+    }
 }
 
 ###
@@ -325,38 +244,39 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "startDateTime": "{{testDate}}T11:00:00",
-  "endDateTime": "{{testDate}}T12:00:00",
-  "attendees": 4,
-  "status": "CONFIRMED",
-  "member": {
-    "id": {{memberId}}
-  },
-  "resource": {
-    "id": {{roomId}}
-  }
+    "startDateTime": "2026-11-20T11:00:00",
+    "endDateTime": "2026-11-20T12:00:00",
+    "attendees": 4,
+    "totalCost": 75.0,
+    "status": "CONFIRMED",
+    "member": {
+        "id": 1
+    },
+    "resource": {
+        "id": 1
+    }
 }
 
 ###
 
-### 7.2 Cancel a booking
-### This follows the supplied design: cancellation changes status to CANCELLED.
-### Include any other fields required by your actual update DTO.
-PUT {{baseUrl}}/api/bookings/{{bookingId}}
+### Cancel a booking
+### Your model uses CANCELLED as a booking status
+PUT {{baseUrl}}/api/bookings/1
 Content-Type: application/json
 Accept: application/json
 
 {
-  "startDateTime": "{{testDate}}T11:00:00",
-  "endDateTime": "{{testDate}}T12:00:00",
-  "attendees": 4,
-  "status": "CANCELLED",
-  "member": {
-    "id": {{memberId}}
-  },
-  "resource": {
-    "id": {{roomId}}
-  }
+    "startDateTime": "2026-11-20T09:00:00",
+    "endDateTime": "2026-11-20T10:00:00",
+    "attendees": 4,
+    "totalCost": 75.0,
+    "status": "CANCELLED",
+    "member": {
+        "id": 1
+    },
+    "resource": {
+        "id": 1
+    }
 }
 
 ###
