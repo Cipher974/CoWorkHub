@@ -146,7 +146,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
             isThreeLine: true,
             trailing: inactive ? const Text('Cancelled') : _changingId == b.id
                 ? const CircularProgressIndicator()
-                : Wrap(mainAxisSize: MainAxisSize.min, children: [
+                : Wrap( children: [
                     IconButton(tooltip: 'Update', onPressed: () => _edit(b), icon: const Icon(Icons.edit)),
                     IconButton(tooltip: 'Cancel', onPressed: () => _cancel(b), icon: const Icon(Icons.cancel_outlined)),
                   ]),

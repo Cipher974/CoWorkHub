@@ -208,10 +208,7 @@ Content-Type: application/json
 }
 
 
-###
-
-### 6.5 Room over capacity - expected HTTP 400
-### The room created above has capacity 8; request 9 attendees.
+### Update a booking
 PUT http://localhost:8080/api/bookings/1
 Content-Type: application/json
 Accept: application/json
