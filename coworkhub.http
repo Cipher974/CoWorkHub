@@ -14,7 +14,7 @@
 ### ==========================================================
 
 @baseUrl = http://localhost:8080
-@testDate = 2026-11-21
+@testDate = 2026-11-22
 
 ### Replace these values with IDs returned by your POST requests.
 @memberId = 1
@@ -139,7 +139,8 @@ Accept: application/json
     "location": "Doha",
     "hourlyRate": 15.0,
     "status": "ACTIVE",
-    "deskType": "STANDARD"
+    "deskType": "STANDARD",
+    "capacity": 1
 }
 
 
@@ -192,18 +193,17 @@ Accept: application/json
 
 ###
 
+
+
 ### Create a booking
-### Change member and resource IDs to existing records
-POST {{baseUrl}}/api/bookings
+POST {{baseUrl}}/api/bookings?memberId=1&resourceId=1
 Content-Type: application/json
 Accept: application/json
 
 {
-    "startDateTime": "2026-11-20T09:00:00",
-    "endDateTime": "2026-11-20T10:00:00",
+    "startDateTime": "2026-11-22T09:00:00",
+    "endDateTime": "2026-11-22T10:00:00",
     "attendees": 4,
-    "totalCost": 75.0,
-    "status": "CONFIRMED",
     "member": {
         "id": 1
     },
@@ -211,6 +211,7 @@ Accept: application/json
         "id": 1
     }
 }
+
 
 ###
 

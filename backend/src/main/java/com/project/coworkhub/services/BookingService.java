@@ -3,6 +3,7 @@ package com.project.coworkhub.services;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import com.project.coworkhub.models.BookingStatus;
 
 import com.project.coworkhub.exceptions.NotFoundException;
 import com.project.coworkhub.models.BookableResource;
@@ -41,19 +42,34 @@ public class BookingService {
         return bookingRepository.findByMemberId(memberId);
     }
 
-    @Transactional
-    public Booking add(Long memberId, Long resourceId, Booking booking) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NotFoundException("Member " + memberId + " not found"));
-        BookableResource resource = resourceRepository.findById(resourceId)
-                .orElseThrow(() -> new NotFoundException("Resource " + resourceId + " not found"));
+    // @Transactional
+    // public Booking add(Long memberId, Long resourceId, Booking booking) {
+    //     Member member = memberRepository.findById(memberId)
+    //             .orElseThrow(() -> new NotFoundException("Member " + memberId + " not found"));
+    //     BookableResource resource = resourceRepository.findById(resourceId)
+    //             .orElseThrow(() -> new NotFoundException("Resource " + resourceId + " not found"));
 
-        booking.setId(null);
-        booking.setMember(member);
-        booking.setResource(resource);
+    //     booking.setId(null);
+    //     booking.setMember(member);
+    //     booking.setResource(resource);
         
-        return bookingRepository.save(booking);
-    }
+    //     return bookingRepository.save(booking);
+    // }
+    @Transactional
+public Booking add(Long memberId, Long resourceId, Booking booking) {
+    Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new NotFoundException("Member " + memberId + " not found"));
+
+    BookableResource resource = resourceRepository.findById(resourceId)
+            .orElseThrow(() -> new NotFoundException("Resource " + resourceId + " not found"));
+
+    booking.setId(null);
+    booking.setMember(member);
+    booking.setResource(resource);
+    booking.setStatus(BookingStatus.CONFIRMED);
+
+    return bookingRepository.save(booking);
+}
 
     @Transactional
     public Booking update(Long id, Booking updatedBooking) {
