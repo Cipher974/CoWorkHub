@@ -25,7 +25,7 @@ public class Booking {
     @NotNull
     private LocalDateTime endDateTime;
     
-    @Min(1)
+    @Min(value = 1, message = "Attendees must be at least 1")
     private int attendees;
 
     @PositiveOrZero
