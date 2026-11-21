@@ -31,7 +31,7 @@ public class Booking {
     @PositiveOrZero
     private double totalCost;
     
-    @NotNull
+    // @NotNull
     @Enumerated(EnumType.STRING)
     private BookingStatus status;
 
