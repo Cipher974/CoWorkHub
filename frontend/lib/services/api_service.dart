@@ -124,18 +124,17 @@ class ApiService {
   }
 
   Future<Booking> updateBooking(int id, {
-    required int memberId,
-    required int resourceId,
-    required DateTime startDateTime,
-    required DateTime endDateTime,
-    required int attendees,
-    required String status,
+  required int memberId,
+  required int resourceId,
+  required DateTime startDateTime,
+  required DateTime endDateTime,
+  required int attendees,
+  required String status,
   }) async {
     final r = await _send(() => http.put(
-      Uri.parse('$baseUrl/api/bookings/$id'), headers: _headers,
+      Uri.parse('$baseUrl/api/bookings/$id'),
+      headers: _headers,
       body: jsonEncode({
-        'member': {'id': memberId},
-        'resource': {'id': resourceId},
         'startDateTime': _formatDateTime(startDateTime),
         'endDateTime': _formatDateTime(endDateTime),
         'attendees': attendees,
