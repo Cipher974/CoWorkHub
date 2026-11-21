@@ -64,54 +64,102 @@ class _BookingsScreenState extends State<BookingsScreen> {
   }
 
   Future<void> _edit(Booking booking) async {
-    var start = booking.startDateTime;
-    var end = booking.endDateTime;
-    final attendees = TextEditingController(text: '${booking.attendees}');
-    Future<DateTime?> pick(DateTime current) async {
-      final day = await showDatePicker(context: context, firstDate: DateTime(2020),
-          lastDate: DateTime(2100), initialDate: current);
-      if (day == null || !mounted) return null;
-      final clock = await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(current));
-      if (clock == null) return null;
-      return DateTime(day.year, day.month, day.day, clock.hour, clock.minute);
-    }
-    final confirmed = await showDialog<bool>(context: context, builder: (context) => StatefulBuilder(
-      builder: (context, update) => AlertDialog(
+  var start = booking.startDateTime;
+  var end = booking.endDateTime;
+  final attendees = TextEditingController(text: '${booking.attendees}');
+  String? submittedAttendeesText;
+
+  Future<DateTime?> pick(DateTime current) async {
+    final day = await showDatePicker(
+      context: context,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2100),
+      initialDate: current,
+    );
+    if (day == null || !mounted) return null;
+    final clock = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(current),
+    );
+    if (clock == null) return null;
+    return DateTime(day.year, day.month, day.day, clock.hour, clock.minute);
+  }
+
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (dialogContext) => StatefulBuilder(
+      builder: (dialogContext, update) => AlertDialog(
         title: Text('Update booking #${booking.id}'),
-        content: Column(mainAxisSize: MainAxisSize.min, children: [
-          OutlinedButton(onPressed: () async {
-            final chosen = await pick(start);
-            if (chosen != null) update(() => start = chosen);
-          }, child: Text('Start: ${_date(start)}')),
-          OutlinedButton(onPressed: () async {
-            final chosen = await pick(end);
-            if (chosen != null) update(() => end = chosen);
-          }, child: Text('End: ${_date(end)}')),
-          TextField(controller: attendees, keyboardType: TextInputType.number,
-            decoration: const InputDecoration(labelText: 'Attendees')),
-        ]),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            OutlinedButton(
+              onPressed: () async {
+                final chosen = await pick(start);
+                if (chosen != null && dialogContext.mounted) {
+                  update(() => start = chosen);
+                }
+              },
+              child: Text('Start: ${_date(start)}'),
+            ),
+            OutlinedButton(
+              onPressed: () async {
+                final chosen = await pick(end);
+                if (chosen != null && dialogContext.mounted) {
+                  update(() => end = chosen);
+                }
+              },
+              child: Text('End: ${_date(end)}'),
+            ),
+            TextField(
+              controller: attendees,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(labelText: 'Attendees'),
+            ),
+          ],
+        ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Back')),
-          FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('Save')),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text('Back'),
+          ),
+          FilledButton(
+            onPressed: () {
+              submittedAttendeesText = attendees.text;
+              Navigator.pop(dialogContext, true);
+            },
+            child: const Text('Save'),
+          ),
         ],
       ),
-    ));
-    final count = int.tryParse(attendees.text);
+    ),
+  );
+
+  // Let the dialog route finish unmounting before disposing the controller.
+  WidgetsBinding.instance.addPostFrameCallback((_) {
     attendees.dispose();
-    if (confirmed != true || !mounted) return;
-    if (!start.isBefore(end) || count == null || count < 1) {
-      _message('Check start/end dates and attendees.', error: true);
-      return;
-    }
-    setState(() => _changingId = booking.id);
-    try {
-      await _api.updateBooking(booking.id,
-        memberId: booking.memberId, resourceId: booking.resourceId,
-        startDateTime: start, endDateTime: end, attendees: count,
-        status: booking.status,
-      );
-      _message('Booking updated successfully.');
-      await _load();
+  });
+
+  if (confirmed != true || !mounted) return;
+  final count = int.tryParse((submittedAttendeesText ?? '').trim());
+  if (!start.isBefore(end) || count == null || count < 1) {
+    _message('Check start/end dates and attendees.', error: true);
+    return;
+  }
+
+  setState(() => _changingId = booking.id);
+  try {
+    await _api.updateBooking(
+      booking.id,
+      memberId: booking.memberId,
+      resourceId: booking.resourceId,
+      startDateTime: start,
+      endDateTime: end,
+      attendees: count,
+      status: booking.status,
+    );
+    _message('Booking updated successfully.');
+    await _load();
     } catch (e) {
       _message(e.toString(), error: true);
     } finally {

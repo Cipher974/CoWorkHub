@@ -181,32 +181,35 @@ Accept: application/json
 ### 5. BOOKINGS - READ AND CREATE
 ### ==========================================================
 
-### 5.1 Get all bookings
+### Get all bookings
 GET {{baseUrl}}/api/bookings
 Accept: application/json
 
 ###
 
-### 5.2 Get booking by ID
+### Get booking by ID
 GET {{baseUrl}}/api/bookings/{{bookingId}}
 Accept: application/json
 
 ###
 
-
-
 ### Create a booking
-POST http://localhost:8080/api/bookings?memberId=1&resourceId=2
+POST {{baseUrl}}/api/bookings?memberId={{memberId}}&resourceId={{deskId}}
 Content-Type: application/json
+Accept: application/json
 
 {
-    "startDateTime": "2026-11-20T09:00:00",
-    "endDateTime": "2026-11-20T10:00:00",
-    "attendees": 4,
-    "totalCost": 75.0,
-    "status": "CONFIRMED"
+  "startDateTime": "{{testDate}}T09:00:00",
+  "endDateTime": "{{testDate}}T10:00:00",
+  "attendees": 1,
+  "totalCost": 15.0,
+  "status": "CONFIRMED"
 }
 
+
+### ==========================================================
+### 7. UPDATE AND CANCEL BOOKINGS
+### ==========================================================
 
 ### Update a booking
 PUT http://localhost:8080/api/bookings/1
@@ -221,56 +224,23 @@ Accept: application/json
   "status": "CONFIRMED"
 }
 
-### ==========================================================
-### 7. UPDATE AND CANCEL BOOKINGS
-### ==========================================================
-
-### 7.1 Update a booking
-### Confirm the update request DTO/service requirements before running.
-PUT {{baseUrl}}/api/bookings/{{bookingId}}
-Content-Type: application/json
-Accept: application/json
-
-{
-    "startDateTime": "2026-11-20T11:00:00",
-    "endDateTime": "2026-11-20T12:00:00",
-    "attendees": 4,
-    "totalCost": 75.0,
-    "status": "CONFIRMED",
-    "member": {
-        "id": 1
-    },
-    "resource": {
-        "id": 1
-    }
-}
-
-###
-
 ### Cancel a booking
 ### Your model uses CANCELLED as a booking status
 PUT {{baseUrl}}/api/bookings/1
 Content-Type: application/json
-Accept: application/json
 
 {
     "startDateTime": "2026-11-20T09:00:00",
     "endDateTime": "2026-11-20T10:00:00",
     "attendees": 4,
     "totalCost": 75.0,
-    "status": "CANCELLED",
-    "member": {
-        "id": 1
-    },
-    "resource": {
-        "id": 1
-    }
+    "status": "CANCELLED"
 }
 
 ###
 
 ### 7.3 Rebook the cancelled time slot - expected success if cancellation releases it
-POST {{baseUrl}}/api/bookings
+POST {{baseUrl}}/api/bookings?memberId={{memberId}}&resourceId={{roomId}}
 Content-Type: application/json
 Accept: application/json
 
@@ -278,12 +248,8 @@ Accept: application/json
   "startDateTime": "{{testDate}}T11:00:00",
   "endDateTime": "{{testDate}}T12:00:00",
   "attendees": 2,
-  "member": {
-    "id": {{memberId}}
-  },
-  "resource": {
-    "id": {{roomId}}
-  }
+  "totalCost": 75.0,
+  "status": "CONFIRMED"
 }
 
 
@@ -310,7 +276,7 @@ Accept: application/json
 ###
 
 ### 8.2 Attempt to book the OUT_OF_SERVICE room - expected HTTP 409
-POST {{baseUrl}}/api/bookings
+POST {{baseUrl}}/api/bookings?memberId={{memberId}}&resourceId={{roomId}}
 Content-Type: application/json
 Accept: application/json
 
@@ -318,12 +284,8 @@ Accept: application/json
   "startDateTime": "{{testDate}}T15:00:00",
   "endDateTime": "{{testDate}}T16:00:00",
   "attendees": 2,
-  "member": {
-    "id": {{memberId}}
-  },
-  "resource": {
-    "id": {{roomId}}
-  }
+  "totalCost": 75.0,
+  "status": "CONFIRMED"
 }
 
 ###
