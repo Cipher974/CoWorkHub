@@ -96,22 +96,27 @@ class ApiService {
   }
 
   Future<Booking> createBooking({
-    required int memberId,
-    required int resourceId,
-    required DateTime startDateTime,
-    required DateTime endDateTime,
-    required int attendees,
+  required int memberId,
+  required int resourceId,
+  required DateTime startDateTime,
+  required DateTime endDateTime,
+  required int attendees,
+  double totalCost = 0.0,
   }) async {
+    final uri = Uri.parse('$baseUrl/api/bookings').replace(
+      queryParameters: {
+        'memberId': '$memberId',
+        'resourceId': '$resourceId',
+      },
+    );
     final r = await _send(() => http.post(
-      Uri.parse('$baseUrl/api/bookings'), headers: _headers,
+      uri,
+      headers: _headers,
       body: jsonEncode({
-        // Linked entities are sent by their IDs, not as complete records.
-        // Matches the current teammate Booking entity's JSON mapping.
-        'member': {'id': memberId},
-        'resource': {'id': resourceId},
         'startDateTime': _formatDateTime(startDateTime),
         'endDateTime': _formatDateTime(endDateTime),
         'attendees': attendees,
+        'totalCost': totalCost,
         'status': 'CONFIRMED',
       }),
     ));
