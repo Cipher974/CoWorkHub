@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:8080
-@testDate = 2026-11-22
+@testDate = 2026-11-24
 
 ### Replace these values with IDs returned by your POST requests.
 @memberId = 1
@@ -24,8 +24,8 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "fullName": "CoWorkHub Test User",
-  "email": "coworkhub.test.20261121@example.com"
+  "fullName": "CoWorkHub Test User2",
+  "email": "coworkhub.test.202261121@example.com"
 }
 
 ###

@@ -313,11 +313,11 @@ class _ResourceFormDialogState extends State<_ResourceFormDialog> {
       'isRoom': _isRoom,
       'name': _name.text.trim(),
       'location': _location.text.trim(),
+      'capacity': int.parse(_capacity.text.trim()), // rooms and desks
       'hourlyRate': double.parse(_rate.text.trim()),
       'status': _status,
     };
     if (_isRoom) {
-      body['capacity'] = int.parse(_capacity.text.trim());
       body['hasProjector'] = _projector;
       body['hasVideoConference'] = _video;
     } else {
@@ -361,16 +361,15 @@ class _ResourceFormDialogState extends State<_ResourceFormDialog> {
                   decoration: const InputDecoration(labelText: 'Location'),
                   validator: _required,
                 ),
-                if (_isRoom)
-                  TextFormField(
-                    controller: _capacity,
-                    decoration: const InputDecoration(labelText: 'Capacity'),
-                    keyboardType: TextInputType.number,
-                    validator: (v) {
-                      final n = int.tryParse(v ?? '');
-                      return (n == null || n < 1) ? 'Enter a number >= 1' : null;
-                    },
-                  ),
+                TextFormField(
+                  controller: _capacity,
+                  decoration: const InputDecoration(labelText: 'Capacity'),
+                  keyboardType: TextInputType.number,
+                  validator: (v) {
+                    final n = int.tryParse(v ?? '');
+                    return (n == null || n < 1) ? 'Enter a number >= 1' : null;
+                  },
+                ),
                 TextFormField(
                   controller: _rate,
                   decoration: const InputDecoration(labelText: 'Hourly rate'),

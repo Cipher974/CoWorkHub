@@ -1,3 +1,4 @@
+
 package com.project.coworkhub.services;
 
 import com.project.coworkhub.models.*;
@@ -41,7 +42,6 @@ public class ResourceService {
     }
 
     public Desk createDesk(Desk desk) {
-        desk.setCapacity(1);                       // a desk holds only one person
         if (desk.getStatus() == null) desk.setStatus(ResourceStatus.ACTIVE);
         return repository.save(desk);
     }
@@ -66,12 +66,14 @@ public class ResourceService {
         }
         if (req.getStatus() != null) resource.setStatus(req.getStatus());
 
+        // Capacity applies to both rooms and desks (minimum 1)
+        if (req.getCapacity() != null) {
+            if (req.getCapacity() < 1)
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Capacity must be at least 1");
+            resource.setCapacity(req.getCapacity());
+        }
+
         if (resource instanceof MeetingRoom room) {
-            if (req.getCapacity() != null) {
-                if (req.getCapacity() < 1)
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Capacity must be at least 1");
-                room.setCapacity(req.getCapacity());
-            }
             if (req.getHasProjector() != null) room.setHasProjector(req.getHasProjector());
             if (req.getHasVideoConference() != null) room.setHasVideoConference(req.getHasVideoConference());
         } else if (resource instanceof Desk desk) {
